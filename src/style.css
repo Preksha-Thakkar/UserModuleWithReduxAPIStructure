@@ -1,0 +1,21 @@
+.active{
+    color: red;
+}
+.text-left{
+    text-align: left;
+}
+.p-1{padding: "10px"}
+.userInfoContainer{
+    background-color: black;
+    border: 1px solid #120c25;
+    box-shadow: #261c53;
+    width: 300px;
+    color: #fff;
+    border-radius: 5px;
+}
+.d-flex{
+    display: flex;
+}
+.m-1{
+    margin: 1px;
+}

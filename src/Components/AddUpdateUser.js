@@ -11,8 +11,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { json } from "react-router-dom";
-import { addUsersData } from "../apis/apiHandler/controllers/User";
-import { UpdateUser, AddUser } from "../Redux/Actions/Action";
+import {
+  addUsersData,
+  updateUsersData,
+} from "../apis/apiHandler/controllers/User";
+// import { UpdateUser, AddUser } from "../Redux/Actions/Action";
 // const { Column, ColumnGroup } = Table;
 const token = localStorage.getItem("BearerToken");
 
@@ -20,7 +23,7 @@ const client = axios.create({
   baseURL: "https://paybevdevapi.azurewebsites.net/api/",
   headers: {
     Authorization: "Bearer " + token,
-    siteid: "18cfa646-6427-4ac1-84f3-034bfb688b29",
+    siteid: "3244057e-6972-452a-b62e-203a2c5e907a",
   },
 });
 export const AddUpdateUser = (props) => {
@@ -142,8 +145,8 @@ export const AddUpdateUser = (props) => {
       isForcePasswordChange: true,
       sites: [
         {
-          id: "9de92a35-ac5c-4a08-a15a-9bc113f8bf00",
-          name: "Bacardi",
+          id: "3244057e-6972-452a-b62e-203a2c5e907a",
+          name: "Keurig",
         },
       ],
       accounts: [
@@ -157,7 +160,7 @@ export const AddUpdateUser = (props) => {
     };
     if (props.currentUserData) {
       reqBody["id"] = props.currentUserData.id;
-      let updatedRecord = await dispatch(UpdateUser(reqBody));
+      let updatedRecord = await dispatch(updateUsersData(reqBody));
       // onUpdate(values);
     } else {
       // let newAdddedRecord = await dispatch(await AddUser(reqBody));

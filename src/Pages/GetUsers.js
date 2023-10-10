@@ -10,7 +10,10 @@ import {
 } from "../Redux/Actions/Action";
 import { useDispatch, useSelector } from "react-redux";
 import store from "../Redux/Store/Store";
-import { getUsersData } from "../apis/apiHandler/controllers/User";
+import {
+  deleteUsersData,
+  getUsersData,
+} from "../apis/apiHandler/controllers/User";
 import {
   Table,
   TableHead,
@@ -33,16 +36,32 @@ export const GetUsers = () => {
   const [clickedUserData, setClickedUserData] = useState();
   const [totalRecords, setTotalRecords] = useState(0);
   const [page, setPage] = useState(0);
+  let searchText = "";
+  let sortBy = "desc";
+  let sortField = "CreatedOn";
+  // let page = 1;
+  let pageSize = 20;
+  let filterByStatus = "All";
+  let siteId = "3244057e-6972-452a-b62e-203a2c5e907a";
 
   useEffect(() => {
     // dispatch(FetchDataAction());
-    dispatch(getUsersData());
+    dispatch(
+      getUsersData(
+        searchText,
+        sortField,
+        page,
+        pageSize,
+        sortBy,
+        filterByStatus,
+        siteId
+      )
+    );
   }, []);
   useEffect(() => {
     setIsLoaded(true);
     setIsModalOpen(false);
     setTotalRecords(state.fetchData?.result?.totalRecord);
-    console.log(totalRecords);
   }, [state]);
   const addNewUser = () => {
     setClickedUserData(null);
@@ -50,7 +69,7 @@ export const GetUsers = () => {
   };
   const formDataCallBack = (childdata) => {};
   const deleteUser = async (userId) => {
-    let deletedela = await dispatch(DeleteUser(userId));
+    let deletedela = await dispatch(deleteUsersData(userId));
   };
   const editUser = (user) => {
     setClickedUserData(user);
@@ -77,8 +96,9 @@ export const GetUsers = () => {
         ) : (
           ""
         )}
-        <div>
+        <div className="d-flex justify-space-between align-i-c mr-1">
           <h1>This is Users</h1>
+
           <Button onClick={addNewUser} variant="contained">
             Add New
           </Button>
@@ -137,7 +157,7 @@ export const GetUsers = () => {
           component="div"
           count={totalRecords ? totalRecords : 0}
           rowsPerPage={10}
-          page={page}
+          page={!totalRecords || totalRecords <= 0 ? 0 : page}
           onPageChange={handleChangePage}
         />
       </>

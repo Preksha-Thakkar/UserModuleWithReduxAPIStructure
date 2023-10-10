@@ -5,12 +5,28 @@ import { userEndPoints } from "../../../apiEndPoints/User/index";
 import axios from "axios";
 
 export const userService = {
-  getUsers: async (body: any) => {
+  getUsers: async (
+    searchText,
+    sortField,
+    page,
+    pageSize,
+    sortBy,
+    filterByStatus,
+    siteId
+  ) => {
     const reqestObj = new requestModel();
     try {
       reqestObj.method = requestMethod.GET;
-      reqestObj.url = userEndPoints.FETCH_DATA;
-      return await axiosRepository.request(reqestObj);
+      reqestObj.url = userEndPoints.FETCH_DATA(
+        searchText,
+        sortField,
+        page,
+        pageSize,
+        sortBy,
+        filterByStatus,
+        siteId
+      );
+      return await callAPI(reqestObj);
     } catch (error) {
       console.log("error from services::>", error);
     }
@@ -18,11 +34,10 @@ export const userService = {
   createUser: async (body: any) => {
     const reqestObj = new requestModel();
     try {
-      console.log("body", body);
       reqestObj.method = requestMethod.POST;
       reqestObj.url = userEndPoints.ADD_DATA;
       reqestObj.data = body;
-      return await axiosRepository.request(reqestObj);
+      return await callAPI(reqestObj);
     } catch (error) {
       console.log("error from services::>", error);
     }
@@ -33,19 +48,22 @@ export const userService = {
       reqestObj.method = requestMethod.POST;
       reqestObj.url = userEndPoints.UPDATE_DATA;
       reqestObj.data = body;
-      return await axiosRepository.request(reqestObj);
+      return await callAPI(reqestObj);
     } catch (error) {
       console.log("error from services::>", error);
     }
   },
-  deleteUser: async (body: any) => {
+  deleteUser: async (userId: any) => {
     const reqestObj = new requestModel();
     try {
       reqestObj.method = requestMethod.DELETE;
-      reqestObj.url = userEndPoints.DELETE_DATA;
-      return await axiosRepository.request(reqestObj);
+      reqestObj.url = userEndPoints.DELETE_DATA(userId);
+      return await callAPI(reqestObj);
     } catch (error) {
       console.log("error from services::>", error);
     }
   },
 };
+function callAPI(requestObj) {
+  return axiosRepository.request(requestObj);
+}

@@ -68,6 +68,19 @@ async function AddUser(requestbody) {
   };
 }
 
+// export function bindComments(postId) {
+//   return function (dispatch) {
+//     return API.fetchComments(postId).then((comments) => {
+//       // dispatch
+//       dispatch({
+//         type: BIND_COMMENTS,
+//         comments,
+//         postId,
+//       });
+//     });
+//   };
+// }
+
 export {
   AddItemAction,
   RemoveItemAction,

@@ -2,6 +2,7 @@ import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 
 import { useAuth } from "./Auth";
+import MenuItem from "antd/es/menu/MenuItem";
 
 const { Header, Content, Sider } = Layout;
 export const LayoutMenu = () => {
@@ -11,7 +12,7 @@ export const LayoutMenu = () => {
   return (
     <>
       <div>
-        <div className="logo" />
+        {/* <div className="logo" /> */}
         <Menu
           onClick={({ key }) => {
             if (key != "/logout") {
@@ -24,21 +25,13 @@ export const LayoutMenu = () => {
           theme="dark"
           mode="horizontal"
           defaultSelectedKeys={[location.pathname]}
-          items={[
-            {
-              key: "/home",
-              label: "Home",
-            },
-            {
-              key: "/users",
-              label: "Users",
-            },
-            {
-              key: "/logout",
-              label: "logout",
-            },
-          ]}
-        />
+        >
+          <Menu.Item key="/home">Home</Menu.Item>
+          <Menu.Item key="/users">Users</Menu.Item>
+          <Menu.Item key="/logout" className="logout-btn">
+            Logout
+          </Menu.Item>
+        </Menu>
         <Content />
       </div>
       <Outlet />

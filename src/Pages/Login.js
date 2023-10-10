@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "./Auth";
 import { Button, Checkbox, Form, Input } from "antd";
+import { AddUser } from "../Redux/Actions/Action";
+import { useDispatch } from "react-redux";
+import { LoginAction } from "../apis/apiHandler/controllers/Authentication";
 
 export const Login = () => {
   const [user, setUser] = useState("");
@@ -10,67 +13,48 @@ export const Login = () => {
   const location = useLocation();
   const [form] = Form.useForm();
 
+  const dispatch = useDispatch();
+
   const onFinish = (values) => {
     auth.login(user);
     navigate("/", { replace: true });
+    const body = {
+      userName: values.username,
+      password: values.password,
+      siteType: "PAYBEV",
+    };
+    logUserIn(body);
+  };
 
-    try {
-      fetch(
-        "https://paybevstagingapi.azurewebsites.net/api/Authenticate/Login",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            userName: values.username,
-            password: values.password,
-            siteType: "BROOKLYN",
-          }),
-          headers: {
-            "Content-type": "application/json; charset=UTF-8",
-          },
-        }
-      )
-        .then((res) => res.json())
-        .then(
-          (response) => {
-            if (response.responseStatus == 1) {
-              navigate("/home");
-              let usersDetails = response.result.userdetails;
-              var userInfo = {
-                firstName: usersDetails.firstName,
-                lastName: usersDetails.lastName,
-                userId: usersDetails.id,
-                phoneNumber: usersDetails.phoneNumber,
-                agency: usersDetails.agency,
-                twoFactorEnabled: usersDetails.twoFactorEnabled,
-                isForcePasswordChange: usersDetails.isForcePasswordChange,
-                email: usersDetails.email,
-              };
-              localStorage.setItem("BearerToken", response.result.access_token);
+  const logUserIn = async (body) => {
+    let loginResponse = await dispatch(LoginAction(body));
+    if (loginResponse.responseStatus == 1) {
+      navigate("/home");
+      let usersDetails = loginResponse.result.userdetails;
+      var userInfo = {
+        firstName: usersDetails.firstName,
+        lastName: usersDetails.lastName,
+        userId: usersDetails.id,
+        phoneNumber: usersDetails.phoneNumber,
+        agency: usersDetails.agency,
+        twoFactorEnabled: usersDetails.twoFactorEnabled,
+        isForcePasswordChange: usersDetails.isForcePasswordChange,
+        email: usersDetails.email,
+      };
+      localStorage.setItem("BearerToken", loginResponse.result.access_token);
 
-              localStorage.setItem("UserInfo", JSON.stringify(userInfo));
-              var PayBevModulesPermissions =
-                response.result.userRoleDetails.permissions.filter(
-                  (x) => x.moduleType == "Paybev"
-                );
-              localStorage.setItem(
-                "RolePermissions",
-                JSON.stringify(PayBevModulesPermissions)
-              );
-              localStorage.setItem("IsSiteSelected", JSON.stringify(false));
-            } else {
-              console.log("error");
-            }
-
-            //   setIsLoaded(true);
-            //   setItems(result.entries);
-          },
-          (error) => {
-            //   setIsLoaded(true);
-            //   setError(error);
-          }
+      localStorage.setItem("UserInfo", JSON.stringify(userInfo));
+      var PayBevModulesPermissions =
+        loginResponse.result.userRoleDetails.permissions.filter(
+          (x) => x.moduleType == "Paybev"
         );
-    } catch (error) {
-      console.log(error);
+      localStorage.setItem(
+        "RolePermissions",
+        JSON.stringify(PayBevModulesPermissions)
+      );
+      localStorage.setItem("IsSiteSelected", JSON.stringify(false));
+    } else {
+      console.log("error");
     }
   };
 
@@ -103,31 +87,11 @@ export const Login = () => {
       >
         <Input.Password />
       </Form.Item>
-
-      {/* <Form.Item
-        name="remember"
-        valuePropName="checked"
-        wrapperCol={{ offset: 8, span: 16 }}
-      >
-        <Checkbox>Remember me</Checkbox>
-      </Form.Item> */}
-
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button type="primary" htmlType="submit">
           Submit
         </Button>
       </Form.Item>
     </Form>
-    // <div>
-    //   <label>
-    //     Email:{""}
-    //     <input type="text" onChange={(e) => setUser(e.target.value)} />
-    //   </label>
-    //   <label>
-    //     Password:{""}
-    //     <input type="password" onChange={(e) => setUser(e.target.value)} />
-    //   </label>
-    //   <button onClick={handleLogin}>Login</button>
-    // </div>
   );
 };

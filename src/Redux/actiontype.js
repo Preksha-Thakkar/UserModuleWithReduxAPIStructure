@@ -5,6 +5,7 @@ export const Item_CRUD: {
   UPDATE_DATA: string,
   ADD_DATA: String,
   DELETE_DATA: String,
+  LOGIN: String,
 } = {
   ADD_ITEM: "ADD_ITEM",
   REMOVE_ITEM: "REMOVE_ITEM",
@@ -12,4 +13,5 @@ export const Item_CRUD: {
   UPDATE_DATA: "UPDATE_DATA",
   ADD_DATA: "ADD_DATA",
   DELETE_DATA: "DELETE_DATA",
+  LOGIN: "LOGIN",
 };
